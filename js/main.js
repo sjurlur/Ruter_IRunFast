@@ -66,6 +66,7 @@ var createRuterApp = function(){
 
 	Ruter.getTravelAlternatives = function() {
 		var MyDateString = Ruter.createDate();
+		console.log(MyDateString);
 		var url = Ruter.buildUrl(MyDateString, "3012550", "3010360", "2", "100", "1", "True", "12", "Train,Metro");
 		console.log(url);
 		$.getJSON(url, function(json){
@@ -97,7 +98,7 @@ var createRuterApp = function(){
 							}
 						}
 					}
-					returnString += "</ul></div>"
+					returnString += "</ul></div>";
 					if(avvik)
 						return returnString;
 					else
@@ -108,7 +109,8 @@ var createRuterApp = function(){
 				$("#travels").append(totalString);
 			});
 		});
-	}
+	};
 	return Ruter;
-}
+};
 
+var Ruter = createRuterApp();

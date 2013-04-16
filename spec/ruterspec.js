@@ -1,33 +1,10 @@
 describe("Ruter App", function(){
 
     describe("urlBuilder - function to create url", function(){
-        it("throws an error when passed an NaN", function () {
-            var testFn = function () {
-                Sub.convert("b", "dollar", "cm");
-            };
-            expect(testFn).toThrow(new Error("numberToConvert is NaN"));
-        });
-        it("throws an error when passed an unknown from-unit", function () {
-            var testFn = function () {
-                Sub.convert(1, "dollar", "cm");
-            };
-            expect(testFn).toThrow(new Error("unrecognized from-unit"));
-        });
-        it("throws an error when passed an unknown to-unit", function () {
-            var testFn = function () {
-                Sub.convert(1, "cm", "furlongs");
-            };
-            expect(testFn).toThrow(new Error("unrecognized to-unit"));
-        });
-        it("throws an error when passed an unknown to-unit and from-unit", function () {
-            var testFn = function () {
-                Sub.convert(1, "bajs", "furlongs");
-            };
-            expect(testFn).toThrow(new Error("unrecognized to- AND from-unit"));
-        });
+        it("creates a correct url when passed the right parameters", function () {
+            var testUrl = "http://reis.trafikanten.no/reisrest/Travel/GetTravelsByPlaces/?time=160420131449&toplace=3012550&fromplace=3010360&changeMargin=2&changePunish=100&walkingFactor=1&isAfter=True&proposals=12&transporttypes=Train,Metro&callback=?";
 
-        it("converts litres to cups", function () {
-            expect(Sub.convert(14, "litres", "cups")).toEqual(59.18);
+            expect(Ruter.buildUrl("160420131449", "3012550", "3010360", "2", "100", "1", "True", "12", "Train,Metro")).toEqual(testUrl);
         });
     });
 });
