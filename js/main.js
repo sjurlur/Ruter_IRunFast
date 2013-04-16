@@ -64,50 +64,75 @@ var createRuterApp = function(){
 		return url;
 	};
 
-	Ruter.getTravelAlternatives = function() {
+	Ruter.createProposalMarkup = function (proposals){
+		$.each(proposals, function(i, proposal){
+			var markup = "<div class='well'>";
+			if(proposal.deviations.length >0){
+				markup += "<div class='alert alert-info'><ul class='unstyled'>";
+				for(var j=0; j < proposal.deviations.length; j++){
+					markup += "<li><strong>Avvik: </strong>"+proposal.deviations[j]+"</li>";
+				}
+				markup += "</ul></div>";
+			}
+
+			markup += "<ul class='unstyled travel'><li><b>Reisetid: " + proposal.duration + "min</b></li>";
+			markup += "<li><img src='img/tbane.png' />"+proposal.departureTime+" - "+proposal.travelFrom+"</li>";
+			markup += "<li class='journey'>Linje <span class='label'>"+proposal.metroLine+"</span> mot "+proposal.metroDestination+"</li>";
+			markup += "<li><img src='img/tbane.png' />"+proposal.metroArrivalTime+" - "+proposal.metroActualDestination+"</li>";
+			markup += "<li><img src='img/tog.png' />"+proposal.TrainDepartureTime+" - "+proposal.trainDepartureStop+"</li>";
+			markup += "<li class='journey'>Linje <span class='label'>"+proposal.TrainLine+"</span> mot "+proposal.TrainDestination+"</li>";
+			markup += "<li><img src='img/tog.png' />"+proposal.TrainArrivalTime+" - "+proposal.travelTo+"</li>";
+			markup += "</ul></div>";
+			$("#travels").append(markup);
+		});
+
+	};
+
+	Ruter.getTravelAlternatives = function (){
 		var MyDateString = Ruter.createDate();
-		console.log(MyDateString);
 		var url = Ruter.buildUrl(MyDateString, "3012550", "3010360", "2", "100", "1", "True", "12", "Train,Metro");
-		console.log(url);
 		$.getJSON(url, function(json){
+			console.log(json);
+			var proposals = [];
 			$.each(json.GetTravelsByPlacesResult.TravelProposals, function(i, travel){
-				var travelFrom = travel.TravelStages[0].DepartureStop.Name;
-				var travelTo = travel.TravelStages[2].ArrivalStop.Name;
-				var arrivalTime = Ruter.formatDate(travel.ArrivalTime);
-				var departureTime = Ruter.formatDate(travel.DepartureTime);
-				var metroDestination = travel.TravelStages[0].Destination;
-				var metroActualDestination = travel.TravelStages[0].ArrivalStop.Name;
-				var metroDepartureTime = Ruter.formatDate(travel.TravelStages[0].DepartureTime);
-				var metroArrivalTime = Ruter.formatDate(travel.TravelStages[0].ArrivalTime);
-				var metroLine = travel.TravelStages[0].LineName;
-				var TrainDestination = travel.TravelStages[2].Destination;
-				var TrainDepartureTime = Ruter.formatDate(travel.TravelStages[2].DepartureTime);
-				var TrainArrivalTime = Ruter.formatDate(travel.TravelStages[2].ArrivalTime);
-				var TrainLine = travel.TravelStages[2].LineName;
-				var trainDepartureStop = travel.TravelStages[2].DepartureStop.Name;
-				var duration = Ruter.getDuration(travel.DepartureTime, travel.ArrivalTime);
+				var proposal = {};
+				proposal.travelFrom = travel.TravelStages[0].DepartureStop.Name;
+				proposal.travelTo = travel.TravelStages[2].ArrivalStop.Name;
+				proposal.arrivalTime = Ruter.formatDate(travel.ArrivalTime);
+				proposal.departureTime = Ruter.formatDate(travel.DepartureTime);
+				proposal.metroDestination = travel.TravelStages[0].Destination;
+				proposal.metroActualDestination = travel.TravelStages[0].ArrivalStop.Name;
+				proposal.metroDepartureTime = Ruter.formatDate(travel.TravelStages[0].DepartureTime);
+				proposal.metroArrivalTime = Ruter.formatDate(travel.TravelStages[0].ArrivalTime);
+				proposal.metroLine = travel.TravelStages[0].LineName;
+				proposal.TrainDestination = travel.TravelStages[2].Destination;
+				proposal.TrainDepartureTime = Ruter.formatDate(travel.TravelStages[2].DepartureTime);
+				proposal.TrainArrivalTime = Ruter.formatDate(travel.TravelStages[2].ArrivalTime);
+				proposal.TrainLine = travel.TravelStages[2].LineName;
+				proposal.trainDepartureStop = travel.TravelStages[2].DepartureStop.Name;
+				proposal.duration = Ruter.getDuration(travel.DepartureTime, travel.ArrivalTime);
+
 
 				function getDeviations(){
-					var returnString ="<div class='alert alert-info'><ul class='unstyled'>";
-					var avvik = false;
+					var deviations = [];
 					for(var i=0; i < travel.TravelStages.length; i++){
 						if(travel.TravelStages[i].Deviations.length > 0){
-							avvik = true;
 							for(var j=0; j < travel.TravelStages[i].Deviations.length; j++){
-								returnString += "<li><strong>Avvik: </strong>"+travel.TravelStages[i].Deviations[j].Header+"</li>";
+								deviations.push(travel.TravelStages[i].Deviations[j].Header);
 							}
 						}
 					}
-					returnString += "</ul></div>";
-					if(avvik)
-						return returnString;
-					else
-						return "";
+					return deviations;
 				}
 
-				var totalString = "<div class='well'>"+getDeviations(0)+"<ul class='unstyled travel'><li><b>Reisetid: "+duration+"min</b></li><li><img src='img/tbane.png' />"+departureTime+" - "+travelFrom+"</li><li class='journey'>Linje <span class='label'>"+metroLine+"</span> mot "+metroDestination+"</li><li><img src='img/tbane.png' />"+metroArrivalTime+" - "+metroActualDestination+"</li><li><img src='img/tog.png' />"+TrainDepartureTime+" - "+trainDepartureStop+"</li><li class='journey'>Linje <span class='label'>"+TrainLine+"</span> mot "+TrainDestination+"</li><li><img src='img/tog.png' />"+TrainArrivalTime+" - "+travelTo+"</li></ul></div>";
-				$("#travels").append(totalString);
+				proposal.deviations = getDeviations();
+				proposals.push(proposal);
+
+				// var totalString = "<div class='well'>"+getDeviations(0)+"<ul class='unstyled travel'><li><b>Reisetid: "+duration+"min</b></li><li><img src='img/tbane.png' />"+departureTime+" - "+travelFrom+"</li><li class='journey'>Linje <span class='label'>"+metroLine+"</span> mot "+metroDestination+"</li><li><img src='img/tbane.png' />"+metroArrivalTime+" - "+metroActualDestination+"</li><li><img src='img/tog.png' />"+TrainDepartureTime+" - "+trainDepartureStop+"</li><li class='journey'>Linje <span class='label'>"+TrainLine+"</span> mot "+TrainDestination+"</li><li><img src='img/tog.png' />"+TrainArrivalTime+" - "+travelTo+"</li></ul></div>";
+				// $("#travels").append(totalString);
 			});
+			console.log(proposals);
+			Ruter.createProposalMarkup(proposals);
 		});
 	};
 	return Ruter;
