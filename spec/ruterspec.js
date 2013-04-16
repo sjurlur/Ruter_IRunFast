@@ -6,5 +6,9 @@ describe("Ruter App", function(){
 
             expect(Ruter.buildUrl("160420131449", "3012550", "3010360", "2", "100", "1", "True", "12", "Train,Metro")).toEqual(testUrl);
         });
+
+        it("does some errorchecking and stuff, this is a TODO", function(){
+            expect(false).toEqual(true);
+        })
     });
 });
