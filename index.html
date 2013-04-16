@@ -22,81 +22,8 @@
 
 
 $(document).ready(function($){
-
-    var MyDate = new Date();
-    var MyDateString;
-
-    MyDate.setDate(MyDate.getDate());
-
-    MyDateString = ('0' + MyDate.getDate()).slice(-2) + ''
-                 + ('0' + (MyDate.getMonth()+1)).slice(-2) + ''
-                 + MyDate.getFullYear() + ''
-                 + MyDate.getHours() + ''
-                 + ('0' + MyDate.getMinutes()).slice(-2);
-    $("#bla").text(MyDateString);
-    //$("#bla").text("displaydate");
-
-    function formatDate(theDate){
-        theDate = theDate.slice(6,19);
-        theDate = parseInt(theDate);
-        var date = new Date(theDate);
-        dateString = date.getHours()+":"+('0'+date.getMinutes()).slice(-2);
-        return dateString;
-    }
-
-    function getDuration(date1, date2){
-        date1 = new Date(parseInt(date1.slice(6,19)));
-        date2 = new Date(parseInt(date2.slice(6,19)));
-        return (Math.abs(date2-date1))/1000/60;
-
-    }
-
-    var getTravelAlternatives = function() {
-        $.getJSON("http://reis.trafikanten.no/reisrest/Travel/GetTravelsByPlaces/?time="+MyDateString+"&toplace=3012550&fromplace=3010360&changeMargin=2&changePunish=100&walkingFactor=1&isAfter=True&proposals=12&transporttypes=Train,Metro&callback=?", function(json){
-            console.log(json);
-            $.each(json.GetTravelsByPlacesResult.TravelProposals, function(i, travel){
-                var travelFrom = travel.TravelStages[0].DepartureStop.Name;
-                var travelTo = travel.TravelStages[2].ArrivalStop.Name;
-                var arrivalTime = formatDate(travel.ArrivalTime);
-                var departureTime = formatDate(travel.DepartureTime);
-                var metroDestination = travel.TravelStages[0].Destination;
-                var metroActualDestination = travel.TravelStages[0].ArrivalStop.Name;
-                var metroDepartureTime = formatDate(travel.TravelStages[0].DepartureTime);
-                var metroArrivalTime = formatDate(travel.TravelStages[0].ArrivalTime);
-                var metroLine = travel.TravelStages[0].LineName;
-                var TrainDestination = travel.TravelStages[2].Destination;
-                var TrainDepartureTime = formatDate(travel.TravelStages[2].DepartureTime);
-                var TrainArrivalTime = formatDate(travel.TravelStages[2].ArrivalTime);
-                var TrainLine = travel.TravelStages[2].LineName;
-                var trainDepartureStop = travel.TravelStages[2].DepartureStop.Name;
-                var duration = getDuration(travel.DepartureTime, travel.ArrivalTime);
-
-                function getDeviations(){
-                    var returnString ="<div class='alert alert-info'><ul class='unstyled'>";
-                    var avvik = false;
-                    for(var i=0; i < travel.TravelStages.length; i++){
-                        if(travel.TravelStages[i].Deviations.length > 0){
-                            avvik = true;
-                            for(var j=0; j < travel.TravelStages[i].Deviations.length; j++){
-                                returnString += "<li><strong>Avvik: </strong>"+travel.TravelStages[i].Deviations[j].Header+"</li>";
-                            }
-                        }
-                    }
-                    returnString += "</ul></div>"
-                    if(avvik)
-                        return returnString;
-                    else
-                        return "";
-                }
-
-                var totalString = "<div class='well'>"+getDeviations(0)+"<ul class='unstyled travel'><li><b>Reisetid: "+duration+"min</b></li><li><img src='img/tbane.png' />"+departureTime+" - "+travelFrom+"</li><li class='journey'>Linje <span class='label'>"+metroLine+"</span> mot "+metroDestination+"</li><li><img src='img/tbane.png' />"+metroArrivalTime+" - "+metroActualDestination+"</li><li><img src='img/tog.png' />"+TrainDepartureTime+" - "+trainDepartureStop+"</li><li class='journey'>Linje <span class='label'>"+TrainLine+"</span> mot "+TrainDestination+"</li><li><img src='img/tog.png' />"+TrainArrivalTime+" - "+travelTo+"</li></ul></div>";
-                $("#travels").append(totalString);
-            });
-            console.log(json);
-        });
-
-    }
-    getTravelAlternatives();
+    var Ruter = createRuterApp();
+    Ruter.getTravelAlternatives();
 });
 </script>
 
