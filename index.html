@@ -18,11 +18,11 @@
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
         <script src="js/jquery.js"></script>
         <script>
-        
 
- 
+
+
 $(document).ready(function($){
-    
+
     var MyDate = new Date();
     var MyDateString;
 
@@ -53,6 +53,7 @@ $(document).ready(function($){
 
     var getTravelAlternatives = function() {
         $.getJSON("http://reis.trafikanten.no/reisrest/Travel/GetTravelsByPlaces/?time="+MyDateString+"&toplace=3012550&fromplace=3010360&changeMargin=2&changePunish=100&walkingFactor=1&isAfter=True&proposals=12&transporttypes=Train,Metro&callback=?", function(json){
+            console.log(json);
             $.each(json.GetTravelsByPlacesResult.TravelProposals, function(i, travel){
                 var travelFrom = travel.TravelStages[0].DepartureStop.Name;
                 var travelTo = travel.TravelStages[2].ArrivalStop.Name;
@@ -110,7 +111,7 @@ $(document).ready(function($){
                 <h1 class="title">Når går banen?</h1>
                 <nav>
                     <ul>
-                        
+
                     </ul>
                 </nav>
             </header>
@@ -118,7 +119,7 @@ $(document).ready(function($){
 
         <div class="main-container">
             <div class="main wrapper clearfix">
-                
+
                 <article>
                     <div id="travels">
                 </div>
@@ -134,9 +135,9 @@ $(document).ready(function($){
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
-       
 
-    
+
+
 
         <script src="js/main.js"></script>
 
