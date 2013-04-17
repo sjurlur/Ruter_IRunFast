@@ -31,6 +31,12 @@ var createRuterApp = function(){
 		return MyDateString;
 	};
 
+	Ruter.getStops = function (){
+		$.getJSON('stoppesteder.json', function(stops){
+			Ruter.Stops = stops;
+		});
+	};
+
 	Ruter.buildUrl = function (myDate, toPlace, fromPlace, changeMargin, changePunish, walkingFactor, isAfter, proposals, transportTypes){
 		var url = "http://reis.trafikanten.no/reisrest/Travel/GetTravelsByPlaces/?";
 		if(myDate !== undefined){
