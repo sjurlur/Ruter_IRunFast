@@ -65,27 +65,11 @@ var createRuterApp = function(){
 	};
 
 	Ruter.createProposalMarkup = function (proposals){
+		var source = $('#proposal').html(),
+			template = Handlebars.compile(source);
 		$.each(proposals, function(i, proposal){
-			var markup = "<div class='well'>";
-			if(proposal.deviations.length >0){
-				markup += "<div class='alert alert-info'><ul class='unstyled'>";
-				for(var j=0; j < proposal.deviations.length; j++){
-					markup += "<li><strong>Avvik: </strong>"+proposal.deviations[j]+"</li>";
-				}
-				markup += "</ul></div>";
-			}
-
-			markup += "<ul class='unstyled travel'><li><b>Reisetid: " + proposal.duration + "min</b></li>";
-			markup += "<li><img src='img/tbane.png' />"+proposal.departureTime+" - "+proposal.travelFrom+"</li>";
-			markup += "<li class='journey'>Linje <span class='label'>"+proposal.metroLine+"</span> mot "+proposal.metroDestination+"</li>";
-			markup += "<li><img src='img/tbane.png' />"+proposal.metroArrivalTime+" - "+proposal.metroActualDestination+"</li>";
-			markup += "<li><img src='img/tog.png' />"+proposal.TrainDepartureTime+" - "+proposal.trainDepartureStop+"</li>";
-			markup += "<li class='journey'>Linje <span class='label'>"+proposal.TrainLine+"</span> mot "+proposal.TrainDestination+"</li>";
-			markup += "<li><img src='img/tog.png' />"+proposal.TrainArrivalTime+" - "+proposal.travelTo+"</li>";
-			markup += "</ul></div>";
-			$("#travels").append(markup);
+			$('#travels').append(template(proposal));
 		});
-
 	};
 
 	Ruter.getTravelAlternatives = function (){
@@ -118,7 +102,7 @@ var createRuterApp = function(){
 					for(var i=0; i < travel.TravelStages.length; i++){
 						if(travel.TravelStages[i].Deviations.length > 0){
 							for(var j=0; j < travel.TravelStages[i].Deviations.length; j++){
-								deviations.push(travel.TravelStages[i].Deviations[j].Header);
+								deviations.push({ text: travel.TravelStages[i].Deviations[j].Header });
 							}
 						}
 					}

@@ -1,0 +1,39 @@
+<div class='well'>
+	{{#if proposal.deviations.length}}
+		<div class='alert alert-info'>
+			<ul class='unstyled'>
+				{{#each proposal.deviations}}
+					<li><strong>Avvik: </strong>{{text}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+	<ul class='unstyled travel'>
+		<li>
+			<b>Reisetid: {{proposal.duration}} min</b>
+		</li>
+		<li>
+			<img src='img/tbane.png' />
+			{{proposal.departureTime}} {{proposal.travelFrom}}
+		</li>
+		<li class='journey'>
+			Linje <span class='label'>
+			{{proposal.metroLine}}</span> mot {{proposal.metroDestination}}
+		</li>
+		<li>
+			<img src='img/tbane.png' />
+			{{proposal.metroArrivalTime}} {{proposal.metroActualDestination}}
+		</li>
+		<li>
+			<img src='img/tog.png' />
+			{{proposal.TrainDepartureTime}} {{proposal.trainDepartureStop}}
+		</li>
+		<li class='journey'>
+			Linje <span class='label'>{{proposal.TrainLine}}</span> mot {{proposal.TrainDestination}}
+		</li>
+		<li>
+			<img src='img/tog.png' />
+			{{proposal.TrainArrivalTime}} {{proposal.travelTo}}
+		</li>
+	</ul>
+</div>

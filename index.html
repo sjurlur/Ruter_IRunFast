@@ -16,22 +16,60 @@
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="lib/handlebars.js"></script>
         <script src="js/jquery.js"></script>
         <script>
+            $(document).ready(function($){
+                Ruter.getTravelAlternatives();
+            });
+        </script>
 
-
-
-$(document).ready(function($){
-    Ruter.getTravelAlternatives();
-});
-</script>
-
+        <script type="text/x-handlebars" id="proposal">
+            <div class='well'>
+                {{#if deviations.length}}
+                    <div class='alert alert-info'>
+                        <ul class='unstyled'>
+                            {{#each deviations}}
+                                <li><strong>Avvik: </strong>{{text}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                {{/if}}
+                <ul class='unstyled travel'>
+                    <li>
+                        <b>Reisetid: {{duration}} min</b>
+                    </li>
+                    <li>
+                        <img src='img/tbane.png' />
+                        {{departureTime}} {{travelFrom}}
+                    </li>
+                    <li class='journey'>
+                        Linje <span class='label'>
+                        {{metroLine}}</span> mot {{metroDestination}}
+                    </li>
+                    <li>
+                        <img src='img/tbane.png' />
+                        {{metroArrivalTime}} {{metroActualDestination}}
+                    </li>
+                    <li>
+                        <img src='img/tog.png' />
+                        {{TrainDepartureTime}} {{trainDepartureStop}}
+                    </li>
+                    <li class='journey'>
+                        Linje <span class='label'>{{TrainLine}}</span> mot {{TrainDestination}}
+                    </li>
+                    <li>
+                        <img src='img/tog.png' />
+                        {{TrainArrivalTime}} {{travelTo}}
+                    </li>
+                </ul>
+            </div>
+        </script>
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-
         <div class="header-container">
             <header class="wrapper clearfix">
                 <h1 class="title">Når går banen?</h1>
@@ -48,7 +86,7 @@ $(document).ready(function($){
 
                 <article>
                     <div id="travels">
-                </div>
+                    </div>
                 </article>
 
                 <aside>
@@ -61,12 +99,7 @@ $(document).ready(function($){
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
-
-
-
-
         <script src="js/main.js"></script>
-
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
